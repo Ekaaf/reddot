@@ -32,5 +32,12 @@ Route::group(['middleware' => ['api']], function () {
             Route::post('delete/{id}', 'QuestionTypeController@delete');
             Route::post('', 'QuestionTypeController@getAllQuestionType');
         });
+
+        Route::group(['prefix' => 'question'], function () {
+            Route::post('create', 'QuestionController@create');
+            Route::post('update/{id}', 'QuestionController@update');
+            Route::post('delete/{id}', 'QuestionController@delete');
+            Route::post('', 'QuestionController@getAllQuestionType');
+        });
     });    
 });

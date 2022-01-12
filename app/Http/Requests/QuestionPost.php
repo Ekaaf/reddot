@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class QuestionTypePost extends FormRequest
+class QuestionPost extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,15 +26,13 @@ class QuestionTypePost extends FormRequest
     public function rules()
     {
         return [
-            'question_type' => 'required|unique:question_types,question_type,'.$this->id,
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            'question_type.required' => 'Question Type is required',
-            'question_type.unique' => 'Question Type already exist',
+            'question_type_id' => 'required',
+            'question' => 'required',
+            'option1' => 'required',
+            'option2' => 'required',
+            'option3' => 'required',
+            'option4' => 'required',
+            'correct_ans' => 'required'
         ];
     }
 
