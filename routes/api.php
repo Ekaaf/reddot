@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-
+use App\Http\Controllers\QuestionTypeController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -25,5 +25,12 @@ Route::group(['middleware' => ['api']], function () {
     Route::post('refresh', 'AuthController@refresh');
     Route::group(['middleware' => ['admin']], function () {
         Route::post('me', 'AuthController@me');
+        
+        Route::group(['prefix' => 'question-type'], function () {
+            Route::post('create', 'QuestionTypeController@create');
+            Route::post('update/{id}', 'QuestionTypeController@update');
+            Route::post('delete/{id}', 'QuestionTypeController@delete');
+            Route::post('', 'QuestionTypeController@getAllQuestionType');
+        });
     });    
 });
