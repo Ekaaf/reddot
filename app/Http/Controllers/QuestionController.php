@@ -76,6 +76,7 @@ class QuestionController extends Controller
             return response()->json(['message' => 'Question not found'], 400);
         }
         else{
+            $question->delete();
             return response()->json(['message' => 'Question Deleted successfully'], 200);
         }
     }

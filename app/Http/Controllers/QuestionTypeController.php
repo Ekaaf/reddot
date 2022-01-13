@@ -13,6 +13,7 @@ class QuestionTypeController extends Controller
     {
         $questionType = new QuestionType();
         $questionType->question_type = $request->question_type;
+        $questionType->multiple_ans = ($request->multiple_ans) ? 1 : 0;
         $questionType->save();
         return response()->json(['message' => 'QuestionType saved successfully'], 201);
     }
@@ -21,6 +22,7 @@ class QuestionTypeController extends Controller
     {
         $questionType = QuestionType::find($id);
         $questionType->question_type = $request->question_type;
+        $questionType->multiple_ans = ($request->multiple_ans) ? 1 : 0;
         $questionType->save();
         return response()->json(['message' => 'QuestionType Updated successfully'], 200);
     }
@@ -33,6 +35,7 @@ class QuestionTypeController extends Controller
             return response()->json(['message' => 'QuestionType not found'], 400);
         }
         else{
+            $questionType->delete();
             return response()->json(['message' => 'QuestionType Deleted successfully'], 200);
         }
     }

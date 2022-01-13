@@ -23,9 +23,9 @@ Route::group(['middleware' => ['api']], function () {
     Route::post('login', 'AuthController@login')->name('login');
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
-    Route::group(['middleware' => ['admin']], function () {
-        Route::post('me', 'AuthController@me');
+    Route::post('me', 'AuthController@me');
         
+    Route::group(['middleware' => ['admin']], function () {
         Route::group(['prefix' => 'question-type'], function () {
             Route::post('create', 'QuestionTypeController@create');
             Route::post('update/{id}', 'QuestionTypeController@update');
@@ -39,5 +39,18 @@ Route::group(['middleware' => ['api']], function () {
             Route::post('delete/{id}', 'QuestionController@delete');
             Route::post('', 'QuestionController@getAllQuestion');
         });
-    });    
+
+        Route::group(['prefix' => 'exam'], function () {
+            Route::post('create', 'ExamController@create');
+            Route::post('update/{id}', 'ExamController@update');
+            Route::post('delete/{id}', 'ExamController@delete');
+            Route::post('', 'ExamController@getAllExam');
+        });
+    });
+
+    Route::group(['middleware' => ['user']], function () {
+        Route::group(['prefix' => 'exam'], function () {
+            Route::post('{id}', 'ExamController@getExamQuestion');
+        });
+    });
 });
