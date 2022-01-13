@@ -20,13 +20,14 @@ class QuestionController extends Controller
             $error['question_type_id'][] = 'Invalid QuestionType';
         }
         else{
-            $correct_ans = array_unique($request->correct_ans);
-            if(($questionType->multiple_ans == 0 && count($correct_ans) > 1) || count($correct_ans) >4){
-                $error['question_type_id'][] = 'Invalid QuestionType';
+            if(!is_array($request->correct_ans)){
+                $error['correct_ans'][] = 'Invalid Correct Answer';
             }
-            if(empty(array_intersect($correct_ans, [1,2,3,4]))){
-                $error['question_type_id'][] = 'Invalid Correct Answer';
-                
+            else{
+                $correct_ans = array_unique($request->correct_ans);
+                if((($questionType->multiple_ans == 0 && count($correct_ans) > 1) || count($correct_ans) >4) || (empty(array_intersect($correct_ans, [1,2,3,4])))){
+                    $error['correct_ans'][] = 'Invalid Correct Answer';
+                }
             }
         }
         
@@ -51,7 +52,7 @@ class QuestionController extends Controller
         return response()->json(['message' => 'Question saved successfully'], 201);
     }
 
-    public function update(QuestionTypePost $request, $id)
+    public function update(QuestionPost $request, $id)
     {   
         $this->validateQuestionType($request);
 
@@ -70,22 +71,25 @@ class QuestionController extends Controller
 
     public function delete(Request $request, $id)
     {   
-        $questionType = QuestionType::find($id);
-        if(is_null($questionType)){
-            return response()->json(['message' => 'QuestionType not found'], 400);
+        $question = Question::find($id);
+        if(is_null($question)){
+            return response()->json(['message' => 'Question not found'], 400);
         }
         else{
-            return response()->json(['message' => 'QuestionType Deleted successfully'], 200);
+            return response()->json(['message' => 'Question Deleted successfully'], 200);
         }
     }
 
     public function getAllQuestionType(Request $request)
     {
-        $questionType =  QuestionType::orderBy('updated_at', 'DESC');
+        $question =  Question::orderBy('updated_at', 'DESC');
         if($request->updated_at){
-            $questionType->where('updated_at', $request->updated_at);
+            $question->where('updated_at', $request->updated_at);
         }
-        $data = $questionType->get();
+        if($request->question_type_id){
+            $question->where('question_type_id', $request->question_type_id);
+        }
+        $data = $question->get();
         return response()->json(['data' => $data], 200);
     }
 
