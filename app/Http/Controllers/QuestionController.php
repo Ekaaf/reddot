@@ -25,7 +25,10 @@ class QuestionController extends Controller
             }
             else{
                 $correct_ans = array_unique($request->correct_ans);
-                if((($questionType->multiple_ans == 0 && count($correct_ans) > 1) || count($correct_ans) >4) || (empty(array_intersect($correct_ans, [1,2,3,4])))){
+                if($questionType->multiple_ans == 0 && count($correct_ans)>1){
+                    $error['correct_ans'][] = 'You cannot select multiple correct answer for this question type';
+                }
+                else if((($questionType->multiple_ans == 0 && count($correct_ans) > 1) || count($correct_ans) >4) || (empty(array_intersect($correct_ans, [1,2,3,4])))){
                     $error['correct_ans'][] = 'Invalid Correct Answer';
                 }
             }

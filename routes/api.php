@@ -45,6 +45,7 @@ Route::group(['middleware' => ['api']], function () {
             Route::post('update/{id}', 'ExamController@update');
             Route::post('delete/{id}', 'ExamController@delete');
             Route::post('', 'ExamController@getAllExam');
+            Route::post('publish', 'ExamController@publish');
         });
     });
 
