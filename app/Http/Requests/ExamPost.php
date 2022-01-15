@@ -27,7 +27,7 @@ class ExamPost extends FormRequest
     {
         return [
             'title' => 'required',
-            'publish_date' => 'required|date',
+            'publish_date' => 'date_format:Y-m-d|after:today',
             'duration' => 'required|integer',
             'num_ques' => 'required|integer'
         ];
