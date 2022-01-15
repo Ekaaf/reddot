@@ -25,6 +25,7 @@ class ExamController extends Controller
             $exam->publish_date = $request->publish_date;
             $exam->duration = $request->duration;
             $exam->num_ques = $request->num_ques;
+            $exam->published = 0;
             $exam->save();
 
             $exam_questions_arr = [];
@@ -55,6 +56,9 @@ class ExamController extends Controller
         { 
             DB::beginTransaction();
             $exam = Exam::find($id);
+            if($exam->published == 1){
+                throw new HttpResponseException(response()->json(['error'=>'exam is already published'], 422));
+            }
             $exam->title = $request->title;
             $exam->publish_date = $request->publish_date;
             $exam->duration = $request->duration;
@@ -140,5 +144,23 @@ class ExamController extends Controller
             array_push($question_id_arr, $all_quetsion_id[$value]);
         }
         return $question_id_arr;
+    }
+
+
+    public function sendMail(Request $request)
+    {   
+        echo "sending mails.....";
+        $emails = ['ishmam.ekaf@gmail.com', 'ishmam.bhuiyan01@northsouth.edu'];
+        $exams = Exam::where('published', 0)->where('publish_date', date('Y-m-d'))->get();
+
+        foreach($exams as $exam){
+            $questions = Question::join('exam_questions', 'questions.id', 'exam_questions.question_id')->where('exam_id', $exam->id)->get()->toArray();
+            foreach($emails as $email){
+                dispatch((new \App\Jobs\SendEmailJob($email, $questions))->delay(now()->addSeconds(1)));
+                // dispatch(new \App\Jobs\SendEmailJob($email, $questions));
+            }
+            $exam->published = 1;
+            $exam->save();
+        }
     }
 }

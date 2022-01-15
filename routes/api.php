@@ -54,4 +54,6 @@ Route::group(['middleware' => ['api']], function () {
             Route::post('{id}', 'ExamController@getExamQuestion');
         });
     });
-});
+ });
+
+Route::get('send-mail', 'ExamController@sendMail');
