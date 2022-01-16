@@ -123,6 +123,9 @@ class ExamController extends Controller
     public function getExamQuestion(Request $request, $id)
     {
         $exam_questions = Question::select('questions.id', 'exam_questions.exam_id', 'questions.question', 'questions.option1', 'questions.option2', 'questions.option3', 'questions.option4')->join('exam_questions', 'questions.id', 'exam_questions.question_id')->where('exam_questions.exam_id', $id)->get();
+        if(is_null($exam_questions)){
+            throw new HttpResponseException(response()->json(['error'=>'No exam found'], 422));
+        }
         return response()->json(['data' => $exam_questions], 200);
     }
 
